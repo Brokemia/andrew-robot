@@ -74,7 +74,7 @@ SMSC USB2517 (7-Port USB 2.0 Hub Controller) :
 
 https://ww1.microchip.com/downloads/en/DeviceDoc/USB2517-USB2517i-Data-Sheet-00001598C.pdf
 
-TI HC126 (Quad 3-State Buffer) : 
+TI HC126 (Quad Tri-State Buffer) : 
 
 https://www.ti.com/lit/ds/symlink/sn54hc126.pdf
 
