@@ -43,7 +43,7 @@ Taking a closer look at the camera modules and servos, this was quickly confirme
 Due to the enumeration of the webcams, we were very curious about the hardware software split of the device with regards to its computer vision and control. Taking a closer look at the Mainboard allowed us to answer this question.
 By tracking PCB traces and identifying the surface mount components, we were able to create a functional block diagram for the AndrewBot (#### Mainboard V10).
 
-INSERT PICTURE
+![AndrewBot (1)](https://github.com/Brokemia/andrew-robot/assets/41448451/0e052e5e-68ab-4bb9-9885-2a58f8b3782f)
 
 The host computer is connected directly to a SMSC USB2517 USB Hub IC which allows the PC to access all 7 channels of the hub. The first 2 channels are connected to female USB connectors such that USB Memory Sticks are able to be plugged in. This is the flash memory that gets enumerated by windows and mostly contains .xml files that contain device specific parameters for initialization, including servo position information in addition to other various resorces.
 For our device, we had a USB Memory Stick inserted into the first channel, with the second channel left populated, but empty. This may be used in other models. 
