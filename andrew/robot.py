@@ -13,7 +13,7 @@ class AndrewRobot:
     GRIPPER_OPEN_POSITION = 2531
     # TODO Get this from andrew.xml
     THUMB_NEUTRAL_POSITION = 1700
-    THUMB_DEPRESS_FIRST_POSITION = 2980
+    THUMB_DEPRESS_FIRST_POSITION = 2970
     THUMB_DEPRESS_SECOND_POSITION = 3050
     THUMB_EJECT_POSITION = 1498
     ARM_LED_ID = 1
@@ -110,6 +110,8 @@ class AndrewRobot:
     def max_speed(self, value):
         self._max_speed = value
         for s in self.servos:
+            if s.is_wheel_mode():
+                continue
             curr_speed = s.moving_speed
             if curr_speed == 0 or curr_speed > value:
                 s.moving_speed = value
@@ -143,7 +145,7 @@ class AndrewRobot:
     def thumb_eject(self):
         self.move_servos(thumb=self.THUMB_EJECT_POSITION)
 
-    def grab_pipette(self, slot_index: int):
+    def grab_pipette(self, slot_index: int): # TODO not currently working
         slot = self.config.pipette_slots[f'slot{slot_index}']
         # TODO calculate height from config data
         self.move_arm_servos(*slot.start_position, linear=2035)
@@ -220,6 +222,14 @@ class AndrewRobot:
                 if p is not None and abs(s.position - p) > self.POSITION_ERROR_MARGIN:
                     done = False
                     break
+
+    def enable_torque(self):
+        for s in self.servos:
+            s.enable_torque()
+
+    def disable_torque(self):
+        for s in self.servos:
+            s.disable_torque()
 
     def led_arm(self, power=255):
         self.led.set_power(self.ARM_LED_ID, power)

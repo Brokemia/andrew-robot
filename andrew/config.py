@@ -85,7 +85,7 @@ class AndrewConfig:
 
     def _load_pipette_slot(self, element: Element) -> PipetteSlot:
         return PipetteSlot(
-            int(element.find('verticalOffset').text),
+            float(element.find('verticalOffset').text),
             self._load_arm_thetas(element.find('startPosition')),
             self._load_arm_thetas(element.find('grabPosition')),
             self._load_arm_thetas(element.find('releasePosition')),

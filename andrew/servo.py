@@ -122,6 +122,9 @@ class Servo:
     def set_wheel_mode(self):
         self.set_angle_limits(0, 0)
 
+    def is_wheel_mode(self) -> bool:
+        return self.get_angle_limits() == (0, 0)
+
     def set_multiturn_mode(self):
         self.set_angle_limits(4095, 4095)
     
