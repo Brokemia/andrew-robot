@@ -11,9 +11,12 @@ These are standard USB webcams. Nothing special needs to be done to communicate 
 ## FTDI Serial Ports
 These devices may not show up as COM ports by default, especially if the Andrew software has been installed. Resolving this is necessary for the library provided in this repository to function. To do this:
 - Open Device Manager
-- Locate the relevant "USB Serial Converter" devices
+- Locate the relevant "USB Serial Converter" devices\
+![opening the properties of the serial device](images/device_manager.png)
 - Open their Properties and go to the Advanced tab
-- Check "Load VCP"
+- Check "Load VCP"\
+<img src="images/enable_vcp.png" alt="Load VCP checkbox" width="400" />
+
 
 This will force the serial ports to use the older VCP drivers, rather than FTDI's special D2XX (or maybe D3XX) drivers.
 > Note that AndrewOS will no longer function with this change, but this can be easily reverted by unchecking Load VCP again
