@@ -41,44 +41,36 @@ class AndrewRobot:
         self.shoulder = Servo(1, self.port_handler, self.packet_handler)
         self.shoulder.torque_limit = 750
         self.shoulder.set_joint_mode(0, 4095)
-        # print(self.shoulder.resolution_divider)
-        # self.shoulder.resolution_divider = 1
-        # TODO resolution divider acting funky
         self.shoulder.set_pid(20, 0, 0)
         self.shoulder.temperature_limit = 75
 
         self.elbow = Servo(2, self.port_handler, self.packet_handler)
         self.elbow.torque_limit = 750
         self.elbow.set_joint_mode(0, 4095)
-        # self.elbow.resolution_divider = 1
         self.elbow.set_pid(20, 0, 0)
         self.elbow.temperature_limit = 75
 
         self.wrist = Servo(3, self.port_handler, self.packet_handler)
         self.wrist.torque_limit = 750
         self.wrist.set_joint_mode(0, 4095)
-        # self.wrist.resolution_divider = 1
         self.wrist.set_pid(20, 0, 0)
         self.wrist.temperature_limit = 75
 
         self.linear = Servo(4, self.port_handler, self.packet_handler)
         self.linear.torque_limit = 1023
         self.linear.set_joint_mode(0, 4095)
-        # self.linear.resolution_divider = 1
         self.linear.set_pid(40, 5, 0)
         self.linear.temperature_limit = 90
 
         self.thumb = Servo(5, self.port_handler, self.packet_handler)
         self.thumb.torque_limit = 1023
         self.thumb.set_joint_mode(0, 4095)
-        # self.thumb.resolution_divider = 1
         self.thumb.set_pid(50, 0, 0)
         self.thumb.temperature_limit = 75
 
         self.gripper = Servo(6, self.port_handler, self.packet_handler)
         self.gripper.torque_limit = 1023
         self.gripper.set_joint_mode(0, 4095)
-        # self.gripper.resolution_divider = 1
         self.gripper.set_pid(50, 5, 0)
         self.gripper.temperature_limit = 75
 
@@ -86,7 +78,6 @@ class AndrewRobot:
         self.twister = Servo(7, self.port_handler, self.packet_handler)
         self.twister.torque_limit = 1023
         self.twister.set_wheel_mode()
-        # self.twister.resolution_divider = 1
         self.twister.set_pid(50, 0, 0)
         self.twister.temperature_limit = 75
 
@@ -177,8 +168,7 @@ class AndrewRobot:
                     wrist: int=None,
                     linear: int=None,
                     thumb: int=None,
-                    gripper: int=None,
-                    twister: int=None):
+                    gripper: int=None):
         moving_xy = shoulder is not None or elbow is not None or wrist is not None
         # If we're moving the linear and there's a chance it could hit the pipette holder, move it up first
         if linear is not None and moving_xy and self.linear.position > self.SAFE_HEIGHT:
@@ -186,7 +176,7 @@ class AndrewRobot:
             self.move_servos_unsafe(linear=min(self.SAFE_HEIGHT, linear))
 
         # We should now be at a height where we can do whatever without hitting the pipette holder
-        self.move_servos_unsafe(shoulder, elbow, wrist, thumb=thumb, gripper=gripper, twister=twister)
+        self.move_servos_unsafe(shoulder, elbow, wrist, thumb=thumb, gripper=gripper)
 
         self.move_servos_unsafe(linear=linear)
 
@@ -196,9 +186,8 @@ class AndrewRobot:
                                 wrist: int=None,
                                 linear: int=None,
                                 thumb: int=None,
-                                gripper: int=None,
-                                twister: int=None):
-        self._move_servos_unsafe([shoulder, elbow, wrist, linear, thumb, gripper, twister])
+                                gripper: int=None):
+        self._move_servos_unsafe([shoulder, elbow, wrist, linear, thumb, gripper, None])
 
     def _move_servos_unsafe(self, positions: [int]):
         zipped = zip(self.servos, positions)

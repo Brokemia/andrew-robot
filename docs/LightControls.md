@@ -5,6 +5,8 @@ One of the serial devices connected to the Andrew USB hub can be used to control
   - LED 2 is at the top near the twister
 - Send a three digit number representing the intensity (000-255)
 
+Note that a delay must occur between connecting to the LED controller, and sending the first data, as the LED controller restarts upon initiating a serial connection.
+
 These digits should be sent as normal ASCII text, and should not have any spaces, newlines, or other characters separating them, even between different commands. For example, sending `1255225510002000` will turn both lights to full power, and then off.
 
 Successfully entering a command will return the response:

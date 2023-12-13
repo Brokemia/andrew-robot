@@ -5,8 +5,7 @@ import time
 from andrew.robot import AndrewRobot
 
 def main():
-    # print(pkt.read2ByteTxRx(port, 1, 0))
-    robot = AndrewRobot('D:\\Resources\\andrew.xml', 'COM4', 250000, 'COM3')
+    robot = AndrewRobot('D:\\Resources\\andrew.xml', 'COM5', 250000, 'COM6')
     robot.max_speed = 50
     # LED needs time to init
     time.sleep(.1)
@@ -15,8 +14,8 @@ def main():
     robot.led_body(0)
 
     robot.open_gripper()
-    while True:
-        pass
+    # while True:
+    #     pass
     
     robot.open_gripper()
     robot.move_servos(1065, 1530, 1300, 2035, 1779)
@@ -27,7 +26,7 @@ def main():
     robot.move_arm_servos(1871, 1905, 1977)
     
     # robot.open_gripper()
-    print("done")
+    print("Done")
     while True:
         pass
 

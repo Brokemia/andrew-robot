@@ -1,0 +1,23 @@
+[project]
+name = "andrew_robot"
+version = "0.0.1"
+authors = [
+    { name="Brokemia", email="37253216+Brokemia@users.noreply.github.com" },
+    { name="Cole Weber" }
+]
+description = "Control Andrew Robots from Andrew Alliance"
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+[project.urls]
+Homepage = "https://github.com/Brokemia/andrew-robot"
+Issues = "https://github.com/Brokemia/andrew-robot/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
