@@ -27,7 +27,8 @@ The three main areas of interest were
 
 Due to the enumeration of webcams and flash storage on a consumer OS such as windows when connected to the AndrewBot via USB, we hypothesized that the internals were COTS (Consumer Off The Shelf) devices. 
 
-INSERT PICTURE
+![usb_tree](https://github.com/Brokemia/andrew-robot/assets/41448451/ad5f2458-c5d2-48df-a08b-75f61020029e)
+
 
 Taking a closer look at the camera modules and servos, this was quickly confirmed. The camera modules were repurposed Logitech webcams and the servos were standard Dynamixel, a brand very commonly used for hobbyist robotics. 
 
