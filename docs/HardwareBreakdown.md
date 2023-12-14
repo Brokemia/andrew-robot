@@ -27,7 +27,8 @@ The three main areas of interest were
 
 Due to the enumeration of webcams and flash storage on a consumer OS such as windows when connected to the AndrewBot via USB, we hypothesized that the internals were COTS (Consumer Off The Shelf) devices. 
 
-INSERT PICTURE
+![usb_tree](https://github.com/Brokemia/andrew-robot/assets/41448451/ad5f2458-c5d2-48df-a08b-75f61020029e)
+
 
 Taking a closer look at the camera modules and servos, this was quickly confirmed. The camera modules were repurposed Logitech webcams and the servos were standard Dynamixel, a brand very commonly used for hobbyist robotics. 
 
@@ -49,7 +50,7 @@ Channels 5, 6 and 7 are all routed to FDTI FT232RL USB to serial converter ICs, 
 
 The Tx and Rx lines for channel 5 are connected to a network of logic gates allowing for the Tx and Rx lines to be connected to the motor bus with one trace, to follow the Dynamixel protocol. This network utilizes the CBUS2 pin of the FDTI IC which by default is configured to go high when data is being transmitted over Tx. To Achieve this, a TI HC126 Quad 3-State Buffer IC is used in combination with a 74AHC1G04 Single Inverter Gate.
 
-Channel 6 does not have a populated FDTI IC, however information from the silkscreen and other unpopulated components suggests that this is used for RS-485 servo communication. In our model (###) none of this is populated.
+Channel 6 does not have a populated FDTI IC, however information from the silkscreen and other unpopulated components suggests that this is used for RS-485 servo communication. In our model (V15) none of this is populated.
 
 ![IMG_2565cpy](https://github.com/Brokemia/andrew-robot/assets/41448451/a87f4c81-0378-461b-862d-28b5c1ff4eac)
 
