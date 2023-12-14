@@ -1,8 +1,9 @@
-from context import andrew
+from context import andrew_robot
 
 import time
-from andrew.led import LedController
+from andrew_robot.led import LedController
 
+# The port will likely need to be changed to try this example
 led_com = 'COM3'
 led_controller = LedController(led_com)
 # LED needs time to init

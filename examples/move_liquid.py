@@ -1,10 +1,13 @@
 #!/usr/bin/env python
-from context import andrew
+from context import andrew_robot
 
 import time
-from andrew.robot import AndrewRobot
+from andrew_robot import AndrewRobot
 
+# Moves liquid from one test tube to another at the corners of a domino
+# Tested using a "Falcon 14mL round bottom tube domino"
 def main():
+    # The ports and config file path will likely need to be changed to try this example
     robot = AndrewRobot('D:\\Resources\\andrew.xml', 'COM4', 250000, 'COM3')
     robot.max_speed = 30
     robot.linear.moving_speed = 50
@@ -16,20 +19,14 @@ def main():
     robot.led_arm(0)
     robot.led_body(0)
 
-    starts_with_pipette = True
+    starts_with_pipette = False
 
     if not starts_with_pipette:
-        robot.open_gripper()
-        robot.move_servos(1065, 1530, 1300, 2035, 1779)
-        robot.move_arm_servos(987, 1413, 1580)
-        robot.close_gripper()
-        robot.move_servos(linear=1600)
-        robot.move_arm_servos(1065, 1530, 1300)
-        robot.move_arm_servos(1871, 1905, 1977)
+        robot.grab_pipette(5)
 
-    robot.close_gripper()
     # Make sure pipette is all the way up in gripper and pipette tip is on
     input("Ready?")
+    robot.close_gripper()
 
     while True:
         for i in range(10):

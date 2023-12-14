@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from context import andrew_robot
 
 import time
@@ -12,12 +13,14 @@ def main():
 
     robot.led_arm(0)
     robot.led_body(0)
-
-    robot.disable_torque()
-    while True:
-        print(robot.get_servo_positions())
-        input()
-        pass
+    
+    # Grab the pipette in the most outwards slot
+    robot.grab_pipette(5)
+    # Present the pipette towards the user
+    robot.move_servos(1871, 1905, 1977)
+    
+    robot.open_gripper()
+    print("Done")
 
 if __name__ == '__main__':
     main()
