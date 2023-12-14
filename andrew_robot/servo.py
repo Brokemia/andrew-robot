@@ -183,7 +183,7 @@ class Servo:
         return self.read_bytes(self.control_table.addr_alarm_led, 1)
     
     # TODO I think each bit might correspond to different errors
-    # like shutdown
+    # similar to shutdown
     @alarm_led.setter
     def alarm_led(self, level: int):
         self.write_bytes(self.control_table.addr_alarm_led, 1, level)

@@ -33,6 +33,8 @@ robot.led_arm(0)
 robot.led_body(0)
 ```
 
+Before any code can be run to interface with the servos, you will need to [fix the drivers they use](https://github.com/Brokemia/andrew-robot/blob/master/docs/Communication.md#ftdi-serial-ports).
+
 ## Documentation
 - [Communicating with the different parts of the robot](https://github.com/Brokemia/andrew-robot/blob/master/docs/Communication.md)
 - [Deep dive into the hardware of Andrew](https://github.com/Brokemia/andrew-robot/blob/master/docs/HardwareBreakdown.md)
@@ -41,4 +43,4 @@ robot.led_body(0)
 - [Software provided by Andrew Alliance](https://github.com/Brokemia/andrew-robot/blob/master/docs/TheIntendedWay.md)
 
 ## Limitations
-Research for this was done largely using the TODO model of Andrew robot. It is very possible that other robots may have issues with this library. Pull requests to improve the information and code here are welcome.
+Research for this was done largely using the 1000G model of Andrew robot (probably, it's not labeled clearly, but we believe this is one of the first generation of Andrew robots) and briefly double-checked on a 1000R, although not thoroughly. It is very possible that other robots may have issues with this library. Pull requests to improve the information and code here are welcome.

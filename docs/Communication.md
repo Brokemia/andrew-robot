@@ -21,6 +21,6 @@ These devices may not show up as COM ports by default, especially if the Andrew 
 This will force the serial ports to use the older VCP drivers, rather than FTDI's special D2XX (or maybe D3XX) drivers.
 > Note that AndrewOS will no longer function with this change, but this can be easily reverted by unchecking Load VCP again
 
-The FTDI LED (TODO confirm devices) device controls the lights for the robot. [More Details](LightControls.md)
+One serial device controls the lights for the robot. [More Details](LightControls.md)
 
-The FTDI AA TTL device controls the servos for the robot. [More Details](Servos.md)
+The other serial device controls the servos for the robot. [More Details](Servos.md)

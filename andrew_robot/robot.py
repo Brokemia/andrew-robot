@@ -7,11 +7,13 @@ class AndrewRobot:
     DXL_PROTOCOL_VERSION = 1.0
     DXL_ALL_ID = 254
     POSITION_ERROR_MARGIN = 10
-    SAFE_HEIGHT = 1579
+    # TODO Most of these should be read from config files on the robot rather than being hardcoded
+    # They may function incorrectly on the wrong model of robot
+    SAFE_HEIGHT = 1600
+    GRAB_HEIGHT = 2035
     GRIPPER_CLOSED_LOAD = 250
     GRIPPER_CLOSED_POSITION = 2100
     GRIPPER_OPEN_POSITION = 2531
-    # TODO Get this from andrew.xml
     THUMB_NEUTRAL_POSITION = 1700
     THUMB_DEPRESS_FIRST_POSITION = 2970
     THUMB_DEPRESS_SECOND_POSITION = 3050
@@ -19,7 +21,8 @@ class AndrewRobot:
     ARM_LED_ID = 1
     BODY_LED_ID = 2
 
-    _max_speed = 50
+    # Relatively slow default speed
+    _max_speed = 60
 
     def __init__(self, config_path: str, servo_com: str, servo_baud: int, led_com: str) -> None:
         self.config = AndrewConfig(config_path)
@@ -36,7 +39,6 @@ class AndrewRobot:
     def _init_servos(self):
         # I increased the Ki for the linear and gripper because they had trouble at low speeds
 
-        # TODO set speeds
         # Values taken from AndrewOS logs
         self.shoulder = Servo(1, self.port_handler, self.packet_handler)
         self.shoulder.torque_limit = 750
@@ -136,30 +138,91 @@ class AndrewRobot:
     def thumb_eject(self):
         self.move_servos(thumb=self.THUMB_EJECT_POSITION)
 
-    def grab_pipette(self, slot_index: int): # TODO not currently working
+    def grab_pipette(self, slot_index: int):
+        """
+        Grabs a pipette from the specified slot. Slots are numbered 1-5, with 1 being closest to the robot.
+        """
         slot = self.config.pipette_slots[f'slot{slot_index}']
-        # TODO calculate height from config data
-        self.move_arm_servos(*slot.start_position, linear=2035)
-        self.max_speed = 12
-        self.shoulder.moving_speed = 8
-        self.elbow.moving_speed = 8
-        # self.wrist.disable_torque()
-        # self.shoulder.disable_torque()
-        # self.elbow.disable_torque()
-        # while True:
-        #     pass
-        self.move_arm_servos(*slot.grab_position)
+        self.open_gripper()
+        self.move_servos_proportional(*slot.start_position, linear=self.GRAB_HEIGHT)
+        self.move_servos_proportional(*slot.grab_position)
         self.close_gripper()
-        while True:
-            pass
+        # Pull the pipette out so that the user doesn't need to worry about bumping into the holder
+        self.move_servos_proportional(*slot.start_position, linear=self.SAFE_HEIGHT)
 
     def move_arm_servos(self,
                         shoulder: int=None,
                         elbow: int=None,
                         wrist: int=None,
                         linear: int=None):
+        """
+        Moves exclusively the servos related to arm movement. Same as move_servos, but clarifies the intent better.
+        """
         self.move_servos(shoulder=shoulder, elbow=elbow, wrist=wrist, linear=linear)
+    
+    def move_servos_proportional(self,
+                                 shoulder: int=None,
+                                 elbow: int=None,
+                                 wrist: int=None,
+                                 linear: int=None,
+                                 thumb: int=None,
+                                 gripper: int=None):
+        """
+        Moves servos at speeds proportional to the distance they need to travel, so
+        all servos reach their goal position at the same time.
+        """
+        # Exclude linear, as it needs to move up and down separately to reach a safe height
+        goals = [shoulder, elbow, wrist, None, thumb, gripper, None]
+
+        # Speeds to restore after this move
+        old_speeds = []
+
+        # Find the servo that will take the longest to move at its set speed
+        distances = []
+        max_time = 0
+        max_servo = None
+        for s, p in zip(self.servos, goals):
+            if p is None:
+                old_speeds.append(None)
+                distances.append(None)
+                continue
+
+            dist = abs(s.position - p)
+            distances.append(dist)
+            speed = s.moving_speed
+            old_speeds.append(speed)
+            if speed == 0 and dist > self.POSITION_ERROR_MARGIN:
+                raise Exception(f"Servo {s.id} cannot reach its destination with a speed of 0")
+
+            time = dist / speed
+            if time > max_time:
+                max_time = time
+                max_servo = s
         
+        # No movement needed, so just return
+        if max_servo is None:
+            return
+        
+        # Calculate the speed for each servo
+        for s, dist in zip(self.servos, distances):
+            if dist is None:
+                continue
+            print(f"Servo {s.id} distance: {dist} speed: {int(dist / max_time)}")
+            s.moving_speed = int(dist / max_time)
+
+        self.move_servos(shoulder=shoulder,
+                         elbow=elbow,
+                         wrist=wrist,
+                         linear=linear,
+                         thumb=thumb,
+                         gripper=gripper)
+        
+        # Restore the old speeds
+        for s, speed in zip(self.servos, old_speeds):
+            if speed is None:
+                continue
+
+            s.moving_speed = speed
 
     # Move such that it won't bump into the pipette holder (unless that's the specified goal)
     def move_servos(self,
@@ -169,6 +232,9 @@ class AndrewRobot:
                     linear: int=None,
                     thumb: int=None,
                     gripper: int=None):
+        """
+        Moves the servos to the specified positions. Attempts to avoid hitting the pipette holder by moving to a safe height before going sideways.
+        """
         moving_xy = shoulder is not None or elbow is not None or wrist is not None
         # If we're moving the linear and there's a chance it could hit the pipette holder, move it up first
         if linear is not None and moving_xy and self.linear.position > self.SAFE_HEIGHT:
